@@ -52,7 +52,7 @@ VCardEmulType vcard_emul_type_from_string(const char *type_string)
      if (strcasecmp(type_string, "CAC") == 0) {
         return VCARD_EMUL_CAC;
      }
-#ifdef USE_PASSTHRU
+#ifdef ENABLE_PCSC
      if (strcasecmp(type_string, "PASSTHRU") == 0) {
         return VCARD_EMUL_PASSTHRU;
      }
