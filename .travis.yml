@@ -1,0 +1,22 @@
+notifications:
+  irc:
+    channels:
+      - "irc.oftc.net#qemu"
+    on_success: change
+    on_failure: always
+sudo: false
+language: c
+compiler:
+  - gcc
+  - clang
+addons:
+  apt:
+    packages:
+      - automake
+      - autoconf
+      - autoconf-archive
+      - pkg-config
+      - libglib2.0-dev
+      - libnss3-dev
+script:
+  - ./autogen.sh --prefix=/usr && make all && make distcheck
