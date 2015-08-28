@@ -2,7 +2,7 @@
  * Implement the 7816 portion of the card spec
  *
  * This work is licensed under the terms of the GNU LGPL, version 2.1 or later.
- * See the COPYING.LIB file in the top-level directory.
+ * See the COPYING file in the top-level directory.
  */
 #ifndef CARD_7816T_H
 #define CARD_7816T_H 1
