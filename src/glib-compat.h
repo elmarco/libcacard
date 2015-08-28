@@ -13,40 +13,10 @@
  *
  */
 
-#ifndef QEMU_GLIB_COMPAT_H
-#define QEMU_GLIB_COMPAT_H
+#ifndef GLIB_COMPAT_H
+#define GLIB_COMPAT_H
 
 #include <glib.h>
-
-/* GLIB version compatibility flags */
-#if !GLIB_CHECK_VERSION(2, 26, 0)
-#define G_TIME_SPAN_SECOND              (G_GINT64_CONSTANT(1000000))
-#endif
-
-#if !GLIB_CHECK_VERSION(2, 28, 0)
-static inline gint64 qemu_g_get_monotonic_time(void)
-{
-    /* g_get_monotonic_time() is best-effort so we can use the wall clock as a
-     * fallback.
-     */
-
-    GTimeVal time;
-    g_get_current_time(&time);
-
-    return time.tv_sec * G_TIME_SPAN_SECOND + time.tv_usec;
-}
-/* work around distro backports of this interface */
-#define g_get_monotonic_time() qemu_g_get_monotonic_time()
-#endif
-
-#ifdef _WIN32
-/*
- * g_poll has a problem on Windows when using
- * timeouts < 10ms, so use wrapper.
- */
-#define g_poll(fds, nfds, timeout) g_poll_fixed(fds, nfds, timeout)
-gint g_poll_fixed(GPollFD *fds, guint nfds, gint timeout);
-#endif
 
 #if !GLIB_CHECK_VERSION(2, 31, 0)
 /* before glib-2.31, GMutex and GCond was dynamic-only (there was a separate
