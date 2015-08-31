@@ -43,7 +43,7 @@ libcacard_la_LDFLAGS =					\
 	-export-symbols $(srcdir)/src/libcacard.syms	\
 	-no-undefined					\
 	-version-info 0:0:0				\
-	$(WARN_LDFLAGS)
+	$(AM_LDFLAGS)					\
 	$(NULL)
 
 pkgconfigdir = $(libdir)/pkgconfig
@@ -53,14 +53,32 @@ bin_PROGRAMS = vscclient
 vscclient_SOURCES = src/vscclient.c
 vscclient_LDADD = libcacard.la $(CACARD_LIBS)
 
-AM_CPPFLAGS = $(CACARD_CFLAGS) $(PCSC_CFLAGS) $(WARN_CFLAGS)
-EXTRA_DIST =					\
+include $(srcdir)/build-aux/glib-tap.mk
+
+test_programs = tests/libcacard
+tests_libcacard_LDADD = libcacard.la
+
+@CODE_COVERAGE_RULES@
+
+AM_CPPFLAGS =					\
+	$(CACARD_CFLAGS)			\
+	$(CODE_COVERAGE_CFLAGS)			\
+	$(PCSC_CFLAGS)				\
+	$(WARN_CFLAGS)				\
+	-I$(srcdir)/src				\
+	$(NULL)
+AM_LDFLAGS = $(CODE_COVERAGE_LDFLAGS) $(WARN_LDFLAGS)
+
+EXTRA_DIST +=					\
 	README.md				\
 	docs/libcacard.txt			\
 	src/libcacard.syms			\
+	build-aux/tap-driver.sh			\
+	build-aux/tap-test			\
+	build-aux/test-driver			\
 	$(NULL)
 
-MAINTAINERCLEANFILES =					\
+MAINTAINERCLEANFILES +=					\
 	$(GITIGNORE_MAINTAINERCLEANFILES_TOPLEVEL)	\
 	$(GITIGNORE_MAINTAINERCLEANFILES_MAKEFILE_IN)	\
 	$(GITIGNORE_MAINTAINERCLEANFILES_M4_LIBTOOL)
@@ -72,7 +90,7 @@ dist-hook: gen-ChangeLog
 $(top_srcdir)/.version:
 	echo $(VERSION) > $@-t && mv $@-t $@
 
-BUILT_SOURCES = $(top_srcdir)/.version
+BUILT_SOURCES += $(top_srcdir)/.version
 EXTRA_DIST += $(top_srcdir)/.version
 gen-ChangeLog:
 	@if test -d "$(srcdir)/.git"; then \
