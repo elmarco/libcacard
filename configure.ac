@@ -35,6 +35,7 @@ if test "x$enable_pcsc" != "xno"; then
    fi
    if test "x$have_pcsc" = "xyes"; then
       enable_pcsc=yes
+      AC_DEFINE([ENABLE_PCSC], 1, [pcsc support])
    fi
 fi
 AM_CONDITIONAL(ENABLE_PCSC, test "x$enable_pcsc" = "xyes")

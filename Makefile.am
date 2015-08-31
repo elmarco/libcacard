@@ -15,9 +15,14 @@ libcacard_la_SOURCES =				\
 	src/vreader.c				\
 	$(NULL)
 
+if ENABLE_PCSC
+libcacard_la_SOURCES += src/capcsc.c
+endif
+
 libcacard_includedir = $(includedir)/cacard
 libcacard_include_HEADERS =			\
 	src/cac.h				\
+	src/capcsc.h				\
 	src/card_7816.h				\
 	src/card_7816t.h			\
 	src/eventt.h				\
@@ -32,7 +37,7 @@ libcacard_include_HEADERS =			\
 	src/vscard_common.h			\
 	$(NULL)
 
-libcacard_la_LIBADD = $(CACARD_LIBS)
+libcacard_la_LIBADD = $(CACARD_LIBS) $(PCSC_LIBS)
 libcacard_la_LDFLAGS =					\
 	-export-symbols $(srcdir)/src/libcacard.syms	\
 	-no-undefined					\
@@ -47,7 +52,7 @@ bin_PROGRAMS = vscclient
 vscclient_SOURCES = src/vscclient.c
 vscclient_LDADD = libcacard.la $(CACARD_LIBS)
 
-AM_CPPFLAGS = $(CACARD_CFLAGS) $(WARN_CFLAGS)
+AM_CPPFLAGS = $(CACARD_CFLAGS) $(PCSC_CFLAGS) $(WARN_CFLAGS)
 EXTRA_DIST =					\
 	README.md				\
 	docs/libcacard.txt			\
